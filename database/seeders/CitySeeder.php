@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class CitySeeder extends Seeder
 {
@@ -11,35 +12,60 @@ class CitySeeder extends Seeder
     {
         // CSVファイルのパスを指定
         $path = database_path('seeders/data/cities.csv');
-        // CSVファイルを開く
-        $handle = fopen($path, 'r');
-
-        // ヘッダーを読み飛ばす
-        fgetcsv($handle, 0, ',', '"', '');
-
-        // 都道府県データを取得
-        $prefectures = DB::table('prefectures')->pluck('id', 'code');
+        if (! file_exists($path)) {
+            throw new RuntimeException("CSV file not found: {$path}");
+        }
+        $file = new \SplFileObject($path);
+        $file->setFlags(
+            \SplFileObject::READ_CSV |
+            \SplFileObject::SKIP_EMPTY |
+            \SplFileObject::DROP_NEW_LINE
+        );
+        $header = $file->fgetcsv();
 
         $cities = [];
-        while (($row = fgetcsv($handle, 0, ',', '"', '')) !== false) {
-            [$prefecture_code, $name, $kana, $code] = $row;
+        // 各行を処理
+        foreach ($file as $row) {
 
+            // 先頭または空行をスキップ
+            if ($file->key() === 0 || $row === false || $row === [null]) {
+                continue;
+            }
+            // ヘッダーと行のカラム数が一致しない場合は例外を投げる
+            if (count($header) !== count($row)) {
+                throw new RuntimeException('Invalid CSV format.');
+            }
+
+            $data = array_combine($header, $row);
+
+            // 都道府県IDを取得
+            $prefectureId = DB::table('prefectures')
+                ->where('code_number', $data['prefecture_code'])
+                ->value('id');
+
+            // 都道府県が見つからない場合は例外を投げる
+            if (! $prefectureId) {
+                throw new RuntimeException(
+                    "Prefecture not found: {$data['prefecture_code']}"
+                );
+            }
+
+            // 都市データを配列に追加
             $cities[] = [
-                'prefecture_id' => $prefectures[$prefecture_code],
-                'name' => $name,
-                'kana' => $kana,
-                'code' => $code,
+                'prefecture_id' => $prefectureId,
+                'code_number' => (int) $data['code_number'],
+                'name' => $data['name'],
+                'kana' => $data['kana'],
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
         }
 
-        // CSVファイルを閉じる
-        fclose($handle);
-
-        // 都市データをDBに挿入
+        // 都市データをDBに挿入（存在する場合は更新）
         DB::table('cities')->upsert(
             $cities,
-            ['code'],
-            ['prefecture_id', 'name', 'kana']
+            ['code_number'],
+            ['prefecture_id', 'name', 'kana', 'updated_at']
         );
 
     }
