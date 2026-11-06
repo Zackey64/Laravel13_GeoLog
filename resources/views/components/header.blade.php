@@ -17,7 +17,7 @@
             </a>
             <a href="{{ route('stations.index') }}"
                 class="rounded-lg px-4 py-1 text-md text-white font-bold transition bg-blue-600 hover:bg-gray-300">
-                市区町村
+                市町村
             </a>
         </nav>
 

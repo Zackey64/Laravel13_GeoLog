@@ -77,13 +77,13 @@
         
 
         {{-- 本体 --}}
-        <x-tabs.index default="map">
+        <x-tabs.index default="list">
 
             {{-- タブ切り替えボタン＋ 登録件数 --}}
             <div class="my-4 flex items-center border-b border-gray-300">
                 <div class="flex-1">
-                    <x-tabs.button name="map" label="マップ" />
                     <x-tabs.button name="list" label="一覧" />
+                    <x-tabs.button name="map" label="マップ" />
                 </div>
                 <div>
                     <p class="text-md text-gray-600">
@@ -108,6 +108,10 @@
             </x-tabs.panel>
 
             <x-tabs.panel name="list">
+                {{-- ページネーション --}}
+                <div class="my-2">
+                    {{ $stations->links() }}
+                </div>
                 {{-- カード一覧 --}}
                 <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     @forelse ($stations as $station)
@@ -118,10 +122,7 @@
                         </p>
                     @endforelse
                 </div>
-                {{-- ページネーション --}}
-                <div class="mt-8">
-                    {{ $stations->links() }}
-                </div>
+                
             </x-tabs.panel>
 
         </x-tabs.index>

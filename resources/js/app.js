@@ -9,20 +9,23 @@ Alpine.start();
 window.L = L;
 
 let map;
+let markers = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+function initializeStationMap() {
     const element = document.getElementById('station-map');
 
-    if (!element) return;
+    if (!element || map) return;
 
-    map = L.map(element).setView([33.3, 130.8], 8);
+    map = L.map(element, {
+        minZoom: 6,
+        maxZoom: 12,
+    }).setView([33.3, 130.8], 8);
+    window.stationMap = map;
 
     L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; OpenStreetMap',
+        attribution: '&copy; 国土地理院',
     }).addTo(map);
-
-    const markers = [];
 
     window.stations.forEach(station => {
         const marker = L.circleMarker(
@@ -41,10 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (markers.length > 0) {
-        const group = L.featureGroup(markers);
-
-        map.fitBounds(group.getBounds(), {
+        map.fitBounds(L.featureGroup(markers).getBounds(), {
             padding: [30, 30],
+            maxZoom: 8,
         });
     }
-});
+}
+
+document.addEventListener('DOMContentLoaded', initializeStationMap);
