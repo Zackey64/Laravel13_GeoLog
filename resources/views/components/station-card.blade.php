@@ -27,7 +27,7 @@
     {{-- 情報 --}}
     <div class="absolute inset-x-0 bottom-0 px-4 py-2 bg-black/70">
         <div>
-            <h2 class="text-md font-bold text-blue-300">
+            <h2 class="text-lg font-bold text-blue-300">
                 {{ $station->name }}
             </h2>
         </div>
