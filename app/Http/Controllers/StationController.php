@@ -17,11 +17,7 @@ class StationController extends Controller
 
         // キーワード検索
         if (! empty($filters['keyword'])) {
-            $query->where(
-                'stations.name',
-                'like',
-                "%{$filters['keyword']}%"
-            );
+            $query->where('stations.name', 'like', "%{$filters['keyword']}%");
         }
         // 都道府県
         if (! empty($filters['prefecture_id'])) {

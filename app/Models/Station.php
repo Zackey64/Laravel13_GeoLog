@@ -27,8 +27,8 @@ class Station extends Model
     {
         return [
             'code' => 'integer',
-            'opened_at' => 'datetime',
-            'closed_at' => 'datetime',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
         ];
     }
 

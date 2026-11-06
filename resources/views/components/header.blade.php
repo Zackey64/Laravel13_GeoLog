@@ -15,7 +15,7 @@
                 >
                 道の駅
             </a>
-            <a href="{{ route('stations.index') }}"
+            <a href="{{ route('cities.index') }}"
                 class="rounded-lg px-4 py-1 text-md text-white font-bold transition bg-blue-600 hover:bg-gray-300">
                 市町村
             </a>

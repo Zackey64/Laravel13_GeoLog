@@ -22,17 +22,17 @@
             </div>
 
 
-            <div class="flex gap-2">
+            <div class="flex gap-1">
 
                     {{-- Previous Page Link --}}
                     @if ($paginator->onFirstPage())
-                        <span class="rounded-lg px-4 py-1 text-sm text-gray-300">
+                        <span class="rounded-full px-3 py-1 text-sm text-gray-300">
                             ＜
                         </span>
                     @else
                         <a
                             href="{{ $paginator->previousPageUrl() }}"
-                            class="rounded-lg px-4 py-1 text-sm font-bold text-gray-600"
+                            class="rounded-full px-3 py-1 text-sm font-bold text-gray-600 bg-white"
                         >
                             ＜
                         </a>
@@ -45,9 +45,9 @@
                                 <a
                                     href="{{ $url }}"
                                     @class([
-                                    'rounded-lg px-4 py-1 text-sm font-bold transition',
+                                    'rounded-full px-3 py-1 text-sm font-bold transition',
                                     'bg-blue-600 text-white' => $page === $paginator->currentPage(),
-                                    'text-gray-600' => $page !== $paginator->currentPage(),
+                                    'text-gray-600 bg-white' => $page !== $paginator->currentPage(),
                                     ])
                                 >
                                     {{ $page }}
@@ -60,12 +60,12 @@
                     @if ($paginator->hasMorePages())
                         <a
                             href="{{ $paginator->nextPageUrl() }}"
-                            class="rounded-lg px-4 py-1 text-sm font-bold text-gray-600"
+                            class="rounded-full px-3 py-1 text-sm font-bold text-gray-600 bg-white"
                         >
                             ＞
                         </a>
                     @else
-                        <span class="rounded-lg px-4 py-1 text-sm text-gray-300">
+                        <span class="rounded-full px-3 py-1 text-sm text-gray-300">
                             ＞
                         </span>
                     @endif

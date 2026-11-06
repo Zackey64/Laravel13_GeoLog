@@ -6,7 +6,11 @@
         tab = '{{ $name }}';
         if (tab === 'map') {
             $nextTick(() => {
+                window.initializeStationMap?.();
+                window.initializeCityMap?.();
+
                 window.stationMap?.invalidateSize();
+                window.cityMap?.invalidateSize();
             });
         }
     "

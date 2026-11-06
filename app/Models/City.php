@@ -16,12 +16,16 @@ class City extends Model
         'code',
         'name',
         'kana',
+        'latitude',
+        'longitude',
     ];
 
     public function casts(): array
     {
         return [
             'code' => 'integer',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
         ];
     }
 

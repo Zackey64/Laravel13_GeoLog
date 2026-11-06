@@ -14,6 +14,8 @@ return new class extends Migration
             $table->unsignedInteger('code')->unique();
             $table->string('name');
             $table->string('kana');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
         });
     }

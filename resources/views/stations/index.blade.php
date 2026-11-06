@@ -8,9 +8,6 @@
             description="全国の道の駅を探すことができます。"
         />
 
-
-
-
         {{-- フィルターセクション --}}
         <div class="p-4 grid sm:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
 
@@ -61,9 +58,8 @@
                     name="sort"
                     label="並び替え"
                     :options="[
-                        (object) ['id' => 'code', 'name' => '道の駅番号順'],
+                        (object) ['id' => 'code', 'name' => 'コード順'],
                         (object) ['id' => 'name', 'name' => '名前順'],
-                        (object) ['id' => 'opened_at', 'name' => 'オープン日が新しい順'],
                         ]"
                     :value="request('sort', 'code')"
                     onchange="this.form.submit()"
@@ -94,11 +90,10 @@
         
             <x-tabs.panel name="map">
                 {{-- マップ表示 --}}
-                <div id="station-map" class="mb-8 aspect-square sm:aspect-video rounded-xl"></div>
+                <div id="station-map" class="aspect-square sm:aspect-video rounded-xl"></div>
                 <script>
                     window.stations = {{ Js::from(
                     $mapStations->map(fn ($station) => [
-                    'id' => $station->id,
                     'name' => $station->name,
                     'latitude' => $station->latitude,
                     'longitude' => $station->longitude,
@@ -122,7 +117,6 @@
                         </p>
                     @endforelse
                 </div>
-                
             </x-tabs.panel>
 
         </x-tabs.index>
