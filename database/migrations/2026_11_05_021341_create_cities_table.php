@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prefecture_id')->constrained()->onDelete('cascade');
-            $table->unsignedInteger('code_number')->unique();
+            $table->unsignedInteger('code')->unique();
             $table->string('name');
             $table->string('kana');
             $table->timestamps();

@@ -11,15 +11,14 @@ return new class extends Migration
         Schema::create('stations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('city_id')->constrained()->onDelete('cascade');
-            $table->string('code_prefix', 1);
-            $table->unsignedInteger('code_number');
+            $table->unsignedInteger('code');
             $table->string('name');
             $table->string('address');
-            $table->date('opened_at')->nullable();
-            $table->date('closed_at')->nullable();
+            $table->string('official_url')->nullable();
+            $table->string('image_path')->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->timestamps();
-
-            $table->unique(['code_prefix', 'code_number']);
         });
     }
 

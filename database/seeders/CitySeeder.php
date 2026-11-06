@@ -40,7 +40,7 @@ class CitySeeder extends Seeder
 
             // 都道府県IDを取得
             $prefectureId = DB::table('prefectures')
-                ->where('code_number', $data['prefecture_code'])
+                ->where('code', $data['prefecture_code'])
                 ->value('id');
 
             // 都道府県が見つからない場合は例外を投げる
@@ -53,7 +53,7 @@ class CitySeeder extends Seeder
             // 都市データを配列に追加
             $cities[] = [
                 'prefecture_id' => $prefectureId,
-                'code_number' => (int) $data['code_number'],
+                'code' => (int) $data['code'],
                 'name' => $data['name'],
                 'kana' => $data['kana'],
                 'created_at' => now(),
@@ -64,7 +64,7 @@ class CitySeeder extends Seeder
         // 都市データをDBに挿入（存在する場合は更新）
         DB::table('cities')->upsert(
             $cities,
-            ['code_number'],
+            ['code'],
             ['prefecture_id', 'name', 'kana', 'updated_at']
         );
 

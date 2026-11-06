@@ -11,9 +11,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Prefecture extends Model
 {
     protected $fillable = [
-        'name',
         'code',
+        'name',
     ];
+
+    public function casts(): array
+    {
+        return [
+            'code' => 'integer',
+        ];
+    }
 
     /**
      * 市区町村とのリレーション

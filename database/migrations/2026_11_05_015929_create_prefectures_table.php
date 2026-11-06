@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('prefectures', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('code_number')->unique();
+            $table->unsignedInteger('code')->unique();
             $table->string('name');
             $table->timestamps();
         });

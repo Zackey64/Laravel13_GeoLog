@@ -40,7 +40,7 @@ class PrefectureSeeder extends Seeder
 
             // 都道府県データを配列に追加
             $prefectures[] = [
-                'code_number' => (int) $data['code_number'],
+                'code' => (int) $data['code'],
                 'name' => $data['name'],
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -50,7 +50,7 @@ class PrefectureSeeder extends Seeder
         // 都道府県データをDBに挿入
         DB::table('prefectures')->upsert(
             $prefectures,
-            ['code_number'],
+            ['code'],
             ['name', 'updated_at']
         );
     }

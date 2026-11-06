@@ -13,9 +13,17 @@ class City extends Model
 {
     protected $fillable = [
         'prefecture_id',
-        'name',
         'code',
+        'name',
+        'kana',
     ];
+
+    public function casts(): array
+    {
+        return [
+            'code' => 'integer',
+        ];
+    }
 
     /**
      * 都道府県とのリレーション

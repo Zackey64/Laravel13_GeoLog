@@ -51,12 +51,10 @@ class StationSeeder extends Seeder
             // 駅データを配列に追加
             $stations[] = [
                 'city_id' => $cityId,
-                'code_prefix' => $data['code_prefix'],
-                'code_number' => (int) $data['code_number'],
+                'code' => (int) $data['code'],
                 'name' => $data['name'],
                 'address' => $data['address'],
-                'opened_at' => $data['opened_at'] ?? null,
-                'closed_at' => $data['closed_at'] ?? null,
+                'official_url' => $data['official_url'] ?? null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -66,8 +64,8 @@ class StationSeeder extends Seeder
         // 駅データをDBに挿入（存在する場合は更新）
         DB::table('stations')->upsert(
             $stations,
-            ['code_prefix', 'code_number'],
-            ['city_id', 'name', 'address', 'opened_at', 'closed_at', 'updated_at']
+            ['code'],
+            ['city_id', 'name', 'address', 'official_url', 'updated_at']
         );
 
     }
