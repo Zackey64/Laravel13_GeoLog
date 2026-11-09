@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 道の駅マスタ
@@ -39,6 +40,15 @@ class Station extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    /**
+     * 訪問履歴とのリレーション
+     * 道の駅に属する訪問履歴を取得する
+     */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
     }
 
     /**

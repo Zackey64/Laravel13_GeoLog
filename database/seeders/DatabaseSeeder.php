@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             PrefectureSeeder::class,
             CitySeeder::class,
             StationSeeder::class,
+            VisitSeeder::class,
         ]);
     }
 }

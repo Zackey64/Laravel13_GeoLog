@@ -11,9 +11,14 @@
 
     {{-- メインコンテンツ --}}
     <div class="p-4 grid sm:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
+        @forelse ($visits as $visit)
+                    {{ $visit->context }}
+        @empty
             <p class="col-span-full py-12 text-center text-gray-600">
-                記録はありません
+                この市町村には訪問記録がありません
             </p>
+        @endforelse
+            
     </div>
 
 

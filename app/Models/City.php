@@ -46,4 +46,13 @@ class City extends Model
     {
         return $this->hasMany(Station::class);
     }
+
+    /**
+     * 訪問履歴とのリレーション
+     * 市区町村に属する訪問履歴を取得する
+     */
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
+    }
 }

@@ -53,12 +53,15 @@ class CityController extends Controller
         // 道の駅を取得
         $stations = $city->stations;
 
+        // 訪問履歴を取得
+        $visits = $city->visits()->with('station')->get();
+
         // 付近の道の駅（最大10件）を取得
         $nearbyStations = $stationDistanceService->getStations(
             $city->latitude,
             $city->longitude,
             20000,
-        )->reject(fn($station) => $city->stations->pluck('id')->contains($station->id))->take(10); // 市町村の道の駅を除外する
+        )->reject(fn ($station) => $city->stations->pluck('id')->contains($station->id))->take(10); // 市町村の道の駅を除外する
 
         // 付近の市町村（最大10件）を取得
         $nearbyCities = $cityDistanceService->getCities(
@@ -67,6 +70,6 @@ class CityController extends Controller
             20000,
         )->reject(fn ($nearbyCity) => $nearbyCity->id === $city->id)->take(10); // 付近の市町村なので除外する
 
-        return view('cities.show', compact('city','stations', 'nearbyCities', 'nearbyStations'));
+        return view('cities.show', compact('city', 'stations', 'visits', 'nearbyCities', 'nearbyStations'));
     }
 }

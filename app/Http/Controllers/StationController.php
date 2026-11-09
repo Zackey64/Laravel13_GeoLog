@@ -50,7 +50,6 @@ class StationController extends Controller
     ): View {
         $station->load('city.prefecture');
 
-
         // 付近の道の駅（最大５件）を取得
         $nearbyStations = $stationDistanceService->getStations(
             $station->latitude,

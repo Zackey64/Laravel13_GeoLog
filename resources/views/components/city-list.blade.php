@@ -1,7 +1,9 @@
 
-<a href="{{ route('cities.show', $city) }}" 
-    class="flex w-full bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
->
+<a href="{{ route('cities.show', $city) }}" @class([
+    'flex w-full border border-gray-300 rounded-lg',
+    'bg-green-200 hover:bg-green-100' => $city->visits->count() > 0,
+    'bg-white hover:bg-gray-100' => $city->visits->count() === 0,
+])>
 
     {{-- 情報 --}}
     <div class="flex w-full px-4 py-2 justify-between items-center">
