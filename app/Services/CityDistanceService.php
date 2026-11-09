@@ -2,25 +2,31 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use App\Models\City;
+use Illuminate\Support\Collection;
 
 class CityDistanceService
 {
-    public function getCities($latitude, $longitude, $radius): array
-    {
-        return City::query()
+    public function getCities(
+        float $latitude,
+        float $longitude,
+        int $radius,
+    ): Collection {
+
+        // 都市を取得するクエリを作成
+        $cities = City::query()
             ->with('prefecture')
             ->selectRaw(
                 'cities.*, ST_Distance_Sphere(
-                    POINT(longitude, latitude),
-                    POINT(?, ?)
-                ) AS distance',
+                POINT(longitude, latitude),
+                POINT(?, ?)
+            ) AS distance',
                 [$longitude, $latitude]
             )
             ->whereNotNull('latitude')
-            ->whereNotNull('longitude')
-            ->having('distance', '<=', $radius)
+            ->whereNotNull('longitude');
+
+        return $cities->having('distance', '<=', $radius)
             ->orderBy('distance')
             ->get();
     }

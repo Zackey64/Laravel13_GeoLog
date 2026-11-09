@@ -24,8 +24,8 @@
                     <div class="flex-1">
                         <x-form.input
                             name="keyword"
-                            label="キーワード"
-                            placeholder="道の駅名で検索"
+                            label="キーワード検索"
+                            placeholder="市町村名で検索"
                         />
                     </div>
 
@@ -61,9 +61,10 @@
                     name="sort"
                     label="並び替え"
                     :options="[
-                        (object) ['id' => 'code', 'name' => 'コード順'],
-                        (object) ['id' => 'kana', 'name' => '名前順'],
-                        ]"
+                        (object) ['id' => 'code', 'name' => '市町村コード順'],
+                        (object) ['id' => 'kana', 'name' => '市町村名順'],
+                        (object) ['id' => 'distance', 'name' => '距離順'],
+                    ]"
                     :value="request('sort', 'code')"
                     onchange="this.form.submit()"
                     />
