@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -54,5 +56,59 @@ class City extends Model
     public function visits(): HasMany
     {
         return $this->hasMany(Visit::class);
+    }
+
+    // ================================
+    // スコープ
+    // ================================
+
+    /**
+     * 訪問済みの市町村
+     */
+    public function scopeVisited(Builder $query): Builder
+    {
+        return $query->where(function ($query) {
+            $query->whereHas('visits')
+                ->orWhereHas('stations.visits');
+        });
+    }
+
+    /**
+     * 未訪問の市町村
+     */
+    public function scopeNotVisited(Builder $query): Builder
+    {
+        return $query
+            ->whereDoesntHave('visits')
+            ->whereDoesntHave('stations.visits');
+    }
+
+    // ================================
+    // アクセサ
+    // ================================
+
+    /**
+     * 訪問済みかどうかのアクセサ
+     */
+    protected function visited(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->visits()->exists() || $this->stations()
+                ->whereHas('visits')->exists()
+        );
+    }
+
+    /**
+     * 訪問回数のアクセサ
+     */
+    protected function visitCount(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->visits()->count()
+                + $this->stations()
+                    ->withCount('visits')
+                    ->get()
+                    ->sum('visits_count')
+        );
     }
 }

@@ -12,7 +12,7 @@ class VisitSeeder extends Seeder
     public function run(): void
     {
         // 市町村への訪問
-        $cities = City::inRandomOrder()->take(5)->get();
+        $cities = City::inRandomOrder()->take(50)->get();
         foreach ($cities as $city) {
             Visit::create([
                 'city_id' => $city->id,
@@ -21,7 +21,7 @@ class VisitSeeder extends Seeder
         }
 
         // 道の駅への訪問
-        $stations = Station::inRandomOrder()->take(5)->get();
+        $stations = Station::inRandomOrder()->take(50)->get();
         foreach ($stations as $station) {
             Visit::create([
                 'station_id' => $station->id,

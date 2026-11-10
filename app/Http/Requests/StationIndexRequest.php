@@ -16,6 +16,7 @@ class StationIndexRequest extends FormRequest
         return [
             'keyword' => ['nullable', 'string', 'max:100'],
             'prefecture_id' => ['nullable', 'integer', 'exists:prefectures,id'],
+            'visited_status' => ['nullable', 'string', 'in:visited,not_visited'],
             'sort' => ['nullable', 'string'],
         ];
     }

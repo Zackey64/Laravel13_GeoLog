@@ -7,18 +7,20 @@
     />
     
     {{-- 戻るボタン --}}
-    <x-back-button/>
+    <x-back-button
+        :url="route('cities.index')"
+        :label="'一覧へ戻る'"
+    />
 
     {{-- メインコンテンツ --}}
-    <div class="p-4 grid sm:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
+    <div class="p-4 gap-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 rounded-xl border border-gray-300 bg-white">
         @forelse ($visits as $visit)
-                    {{ $visit->context }}
+            <x-visit-card :visit="$visit" />
         @empty
             <p class="col-span-full py-12 text-center text-gray-600">
                 この市町村には訪問記録がありません
             </p>
         @endforelse
-            
     </div>
 
 
@@ -36,6 +38,7 @@
                         この市町村には道の駅がありません。
                     </p>
                 @endforelse
+                    
             </div>
         </x-tabs.panel>
 

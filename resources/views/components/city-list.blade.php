@@ -1,3 +1,4 @@
+@props(['city'])
 
 <a href="{{ route('cities.show', $city) }}" @class([
     'flex w-full border rounded-lg overflow-hidden',
@@ -22,18 +23,28 @@
 
         {{-- 情報 --}}
         <div @class([
-            'flex w-full px-4 py-2 gap-2 items-center justify-between rounded-lg',
-            'bg-green-200 hover:bg-green-100 ' => $city->visits->count() > 0,
-            'bg-white hover:bg-gray-100' => $city->visits->count() === 0,
+            'flex w-full px-2 py-2 gap-2 items-center justify-between rounded-lg',
+            'bg-green-50 hover:bg-green-100 ' => $city->visited,
+            'bg-white hover:bg-gray-50' => !$city->visited,
         ])>
-            <p class="text-md font-bold text-gray-900">
-                {{ $city->prefecture->name }} {{ $city->name }}
+        <div class="flex gap-1 items-end">
+            <p class="text-sm  text-gray-900">
+                {{ $city->prefecture->name }}
             </p>
+            <p class="text-md font-bold text-gray-900">
+                {{ $city->name }}
+            </p>
+        </div>
 
-            @if ($city->visits->count() > 0)
-                <p class="text-sm text-green-600">
-                    訪問済
-                </p>
+            @if ($city->visited)
+                <div class=" flex items-center border border-green-600 rounded-md overflow-hidden"> 
+                    <p class="text-xs font-bold text-green-600 px-1">
+                        記録
+                    </p>
+                    <p class="text-xs font-bold aspect-square text-center text-white bg-green-600 px-1">
+                        {{ $city->visitCount }}
+                    </p>
+                </div>
             @endif
         </div>
         

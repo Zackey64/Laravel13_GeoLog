@@ -12,11 +12,12 @@
 
 
         {{-- フィルターセクション --}}
-        <div class="p-4 grid sm:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
+        <div class="p-4 grid md:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
 
             {{-- 都道府県フィルター --}}
             <form action="{{ route('cities.index') }}" method="GET">
                 <input type="hidden" name="prefecture_id" value="{{ request('prefecture_id') }}">
+                <input type="hidden" name="visited_status" value="{{ request('visited_status') }}">
                 <input type="hidden" name="sort" value="{{ request('sort', 'code') }}">
 
                 <div class="flex items-end gap-2">
@@ -47,7 +48,7 @@
             {{--フィルタ＋ソート --}}
             <form action="{{ route('cities.index') }}" method="GET">
                 <input type="hidden" name="keyword" value="{{ request('keyword') }}">
-                <div class="grid gap-2 grid-cols-2">
+                <div class="grid gap-2 grid-cols-3">
 
                     <x-form.select
                     name="prefecture_id"
@@ -58,11 +59,22 @@
                     />
 
                     <x-form.select
+                    :options="[
+                        (object) ['id' => 'visited', 'name' => '訪問済'],
+                        (object) ['id' => 'not_visited', 'name' => '未訪問'],
+                    ]"
+                    :value="request('visited_status')"
+                    onchange="this.form.submit()"
+                    name="visited_status"
+                    label="来訪記録"
+                    />
+
+                    <x-form.select
                     name="sort"
                     label="並び替え"
                     :options="[
-                        (object) ['id' => 'code', 'name' => '市町村コード順'],
-                        (object) ['id' => 'kana', 'name' => '市町村名順'],
+                        (object) ['id' => 'code', 'name' => 'コード順'],
+                        (object) ['id' => 'name', 'name' => '名前順'],
                         (object) ['id' => 'distance', 'name' => '距離順'],
                     ]"
                     :value="request('sort', 'code')"
@@ -102,6 +114,7 @@
                     'prefecture' => $city->prefecture->name,
                     'latitude' => $city->latitude,
                     'longitude' => $city->longitude,
+                    'visited' => $city->visited,
                     ])
                     ) }};
                 </script>

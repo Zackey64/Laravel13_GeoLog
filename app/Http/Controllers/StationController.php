@@ -14,7 +14,6 @@ class StationController extends Controller
     public function index(StationIndexRequest $request): View
     {
         $filters = $request->validated();
-
         $query = Station::query()->with('city.prefecture')->ordered()->reorder();
 
         // キーワード検索
@@ -25,12 +24,16 @@ class StationController extends Controller
         if (! empty($filters['prefecture_id'])) {
             $query->where('prefectures.id', $filters['prefecture_id']);
         }
+        // 来訪記録
+        match ($filters['visited_status'] ?? null) {
+            'visited' => $query->visited(),
+            'not_visited' => $query->notVisited(),
+            default => null,
+        };
         // 並び替え
         match ($filters['sort'] ?? 'code') {
             'name' => $query->orderBy('stations.name'),
-            default => $query
-                ->orderBy('prefectures.code')
-                ->orderBy('stations.code'),
+            default => $query->orderBy('prefectures.code')->orderBy('stations.code'),
         };
 
         // 一覧用：ページネーションあり
@@ -49,6 +52,7 @@ class StationController extends Controller
         StationDistanceService $stationDistanceService,
     ): View {
         $station->load('city.prefecture');
+        $visits = $station->visits;
 
         // 付近の道の駅（最大５件）を取得
         $nearbyStations = $stationDistanceService->getStations(
@@ -64,6 +68,6 @@ class StationController extends Controller
             50000,
         )->reject(fn ($nearbyCity) => $nearbyCity->id === $station->city->id)->take(5);
 
-        return view('stations.show', compact('station', 'nearbyCities', 'nearbyStations'));
+        return view('stations.show', compact('station', 'visits', 'nearbyCities', 'nearbyStations'));
     }
 }

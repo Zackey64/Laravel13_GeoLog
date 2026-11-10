@@ -51,8 +51,11 @@ class Station extends Model
         return $this->hasMany(Visit::class);
     }
 
+    // ================================
+    // スコープ
+    // ================================
     /**
-     * 都道府県コード順、駅コード順に並べるスコープ
+     * 都道府県コード＋駅コード順に並べるスコープ
      */
     public function scopeOrdered(Builder $query): Builder
     {
@@ -62,6 +65,36 @@ class Station extends Model
             ->select('stations.*')
             ->orderBy('prefectures.code')
             ->orderBy('stations.code');
+    }
+
+    /**
+     * 訪問済みの道の駅
+     */
+    public function scopeVisited(Builder $query): Builder
+    {
+        return $query->whereHas('visits');
+    }
+
+    /**
+     * 未訪問の道の駅
+     */
+    public function scopeNotVisited(Builder $query): Builder
+    {
+        return $query->whereDoesntHave('visits');
+    }
+
+    // ================================
+    // アクセサ
+    // ================================
+
+    /**
+     * 訪問済みかどうかのアクセサ
+     */
+    protected function visited(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->visits()->exists()
+        );
     }
 
     /**

@@ -9,7 +9,7 @@
         />
 
         {{-- フィルターセクション --}}
-        <div class="p-4 grid sm:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
+        <div class="p-4 grid md:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
 
             {{-- 都道府県フィルター --}}
             <form action="{{ route('stations.index') }}" method="GET">
@@ -44,13 +44,24 @@
             {{--フィルタ＋ソート --}}
             <form action="{{ route('stations.index') }}" method="GET">
                 <input type="hidden" name="keyword" value="{{ request('keyword') }}">
-                <div class="grid gap-2 grid-cols-2">
+                <div class="grid gap-2 grid-cols-3">
 
                     <x-form.select
                     name="prefecture_id"
                     label="都道府県"
                     :options="$prefectures"
                     :value="request('prefecture_id')"
+                    onchange="this.form.submit()"
+                    />
+
+                    <x-form.select
+                    name="visited_status"
+                    label="来訪記録"
+                    :options="[
+                        (object) ['id' => 'visited', 'name' => '訪問済'],
+                        (object) ['id' => 'not_visited', 'name' => '未訪問'],
+                    ]"
+                    :value="request('visited_status')"
                     onchange="this.form.submit()"
                     />
 
@@ -98,6 +109,7 @@
                     'name' => $station->name,
                     'latitude' => $station->latitude,
                     'longitude' => $station->longitude,
+                    'visited' => $station->visited,
                     ])
                     ) }};
                 </script>

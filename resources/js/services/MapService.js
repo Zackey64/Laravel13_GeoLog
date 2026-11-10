@@ -29,7 +29,7 @@ export function initializeStationMap() {
                 radius: 8,
                 color: '#ffffff',
                 weight: 2,
-                fillColor: '#3388ff',
+                fillColor: station.visited ? '#33cc33' : '#cccccc',
                 fillOpacity: 1,
             }
         ).addTo(stationMap);
@@ -74,10 +74,10 @@ export function initializeCityMap() {
         const marker = L.circleMarker(
             [city.latitude, city.longitude],
             {
-                radius: 6,
+                radius: 8,
                 color: '#ffffff',
                 weight: 2,
-                fillColor: '#3388ff',
+                fillColor: city.visited ? '#33cc33' : '#cccccc',
                 fillOpacity: 1,
             }
         ).addTo(cityMap);
