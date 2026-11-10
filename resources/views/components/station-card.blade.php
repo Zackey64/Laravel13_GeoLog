@@ -26,7 +26,7 @@
 
     {{-- 訪問済みラベル --}}
     @if ($station->visits->count() > 0)
-        <div class="absolute top-2 right-2 border-1 border-green-600 bg-green-200 rounded-full">
+        <div class="absolute top-2 right-2 border border-green-600 bg-green-200 rounded-full">
             <p class="px-3 text-md font-bold text-green-600">
                 訪問済
             </p>

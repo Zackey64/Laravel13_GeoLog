@@ -1,58 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 市町村と道の駅の来訪記録アプリ GeoLog
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+来訪記録アプリです。
 
-## About Laravel
+## 主な機能
+### 実装済機能
+- 一覧画面から登録されている道の駅と市町村の閲覧。
+- 市町村もしくは道の駅に対して写真とコメントを記録できる。
+### 実装予定機能
+- ダッシュボードで、進捗状況を確認できる。
+- 位置情報と連携して、近くの道の駅や市町村を検索・ソートできる。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+※現時点では九州沖縄のみデータ有
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 開発イメージ
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### スマホ
 
-## Learning Laravel
+<table>
+    <tr>
+        <td><img src="image.png" width="100%"></td>
+        <td><img src="image-3.png" width="100%"></td>
+        <td><img src="image-1.png" width="100%"></td>
+        <td><img src="image-2.png" width="100%"></td>
+    </tr>
+</table>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### PC
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<table>
+    <tr>
+        <td><img src="image-4.png" width="100%"></td>
+        <td><img src="image-7.png" width="100%"></td>
+    </tr>
+    <tr>
+        <td><img src="image-5.png" width="100%"></td>
+        <td><img src="image-6.png" width="100%"></td>
+    </tr>
+    <tr>
+        <td><img src="image-10.png" width="100%"></td>
+        <td><img src="image-9.png" width="100%"></td>
+    </tr>
+</table>
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 動作環境
+- Docker Desktop / Docker Compose
+- 開発環境は Laravel Sail で構築
 
-## Agentic Development
+## 環境構築手順
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. リポジトリの clone
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <このリポジトリの URL>
+cd <リポジトリ名>
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. 環境変数ファイルの作成
 
-## Contributing
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. 依存パッケージのインストール
 
-## Code of Conduct
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php85-composer:latest \
+    composer install --ignore-platform-reqs
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. コンテナの起動
 
-## Security Vulnerabilities
+```bash
+sail up -d
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. アプリケーションの初期化
 
-## License
+```bash
+sail artisan key:generate
+sail artisan storage:link
+sail artisan migrate:fresh --seed
+```
+### 6. 緯度経度および画像の取得
+初期データには住所と公式URLのみなので、GoogleAPIから緯度経度、URLから画像を取得する。
+```bash
+sail artisan cities:fetch-coordinates
+sail artisan stations:fetch-coordinates
+sail artisan stations:fetch-images
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 7. フロントエンドのビルド
+
+```bash
+sail npm install
+sail npm run build
+```
+
+### 8. 動作確認
+
+http://localhost にアクセス
+
