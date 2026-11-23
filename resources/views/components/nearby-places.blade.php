@@ -3,10 +3,10 @@
     'cities' => collect(),
 ])
 
-<div class="grid gap-8 grid-cols-1 sm:grid-cols-2">
+<div class="my-8 grid gap-8 grid-cols-1 sm:grid-cols-2">
     {{-- 付近の道の駅 --}}
     <div>
-        <h2 class="py-2 text-lg font-bold border-b border-blue-600">付近の道の駅</h2>
+        <h2 class="pl-2 text-lg font-bold border-b-2 border-l-8 border-blue-600">付近の道の駅</h2>
 
         @forelse ($stations as $station)
             <a
@@ -25,7 +25,7 @@
 
     {{-- 付近の市町村 --}}
     <div>
-        <h2 class="py-2 text-lg font-bold border-b border-blue-600">付近の市町村</h2>
+        <h2 class="pl-2 text-lg font-bold border-b-2 border-l-8 border-blue-600">付近の市町村</h2>
 
         @forelse ($cities as $city)
             <a

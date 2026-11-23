@@ -6,6 +6,9 @@
             class="text-2xl font-extrabold tracking-tight text-blue-600">
             GeoLog
         </a>
+        
+        {{-- ロケーションコントロール --}}
+        <x-location-control />
 
         {{-- ナビゲーション --}}
         <nav class="flex items-center">

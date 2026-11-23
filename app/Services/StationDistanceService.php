@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Station;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class StationDistanceService
@@ -29,5 +30,26 @@ class StationDistanceService
         return $stations->having('distance', '<=', $radius)
             ->orderBy('distance')
             ->get();
+    }
+
+    /*
+     * 指定された緯度・経度からの距離で都市を並び替える
+     */
+    public function orderByDistance(
+        Builder $query,
+        float $latitude,
+        float $longitude,
+    ): Builder {
+        return $query
+            ->selectRaw(
+                'ST_Distance_Sphere(
+                POINT(stations.longitude, stations.latitude),
+                POINT(?, ?)
+            ) AS distance',
+                [$longitude, $latitude]
+            )
+            ->whereNotNull('stations.latitude')
+            ->whereNotNull('stations.longitude')
+            ->orderBy('distance');
     }
 }

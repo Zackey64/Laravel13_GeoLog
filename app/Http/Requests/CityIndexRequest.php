@@ -17,7 +17,9 @@ class CityIndexRequest extends FormRequest
             'keyword' => ['nullable', 'string', 'max:100'],
             'prefecture_id' => ['nullable', 'integer', 'exists:prefectures,id'],
             'visited_status' => ['nullable', 'string', 'in:visited,not_visited'],
-            'sort' => ['nullable', 'string'],
+            'sort' => ['nullable', 'string', 'in:code,name,distance'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
         ];
     }
 }

@@ -1,4 +1,5 @@
 import L from 'leaflet';
+import GeolocationService from './GeolocationService';
 
 // 道の駅マップ
 let stationMap;
@@ -37,6 +38,8 @@ export function initializeStationMap() {
         marker.bindPopup(station.name);
         markers.push(marker);
     });
+    // 現在地マーカーを追加
+    addCurrentLocationMarker(stationMap);
 
     if (markers.length > 0) {
         stationMap.fitBounds(L.featureGroup(markers).getBounds(), {
@@ -85,6 +88,8 @@ export function initializeCityMap() {
         marker.bindPopup(`${city.prefecture}${city.name}`);
         markers.push(marker);
     });
+    // 現在地マーカーを追加
+    addCurrentLocationMarker(cityMap);
 
     if (markers.length > 0) {
         const center = L.featureGroup(markers).getBounds().getCenter();
@@ -92,4 +97,24 @@ export function initializeCityMap() {
     }
 
     cityMap.invalidateSize();
+}
+
+// 現在地マーカーを地図に追加
+function addCurrentLocationMarker(map) {
+    const location = GeolocationService.getSavedPosition();
+
+    if (!location) return;
+
+    L.circleMarker(
+        [location.latitude, location.longitude],
+        {
+            radius: 10,
+            color: '#ffffff',
+            weight: 3,
+            fillColor: '#2563eb',
+            fillOpacity: 1,
+        }
+    )
+        .addTo(map)
+        .bindPopup('保存済みの現在地');
 }

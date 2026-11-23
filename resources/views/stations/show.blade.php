@@ -6,34 +6,6 @@
         description="{{ $station->city->prefecture->name }} {{ $station->city->name }}"
     />
 
-<div class="mb-4 grid gap-2 grid-cols-3">
-    <div class="grid gap-2 grid-rows-3">
-        <a href="{{ $station->official_url }}" target="_blank" class="flex h-full w-full items-center justify-center border border-blue-600 bg-white">
-            <p class=" text-sm text-blue-600">
-                公式サイトへ
-            </p>
-        </a>
-        <a href="{{ $station->official_url }}" target="_blank" class="flex h-full w-full items-center justify-center border border-blue-600 bg-blue-100">
-            <p class=" text-sm text-blue-600">
-                公式サイトへ
-            </p>
-        </a>
-        <div class="p-4 flex flex-col h-full w-full items-center justify-between border border-gray-300 rounded-md bg-yellow-50">
-            <h2 class="text-lg font-bold">{{ $station->name }}がある市町村</h2>
-            <x-city-list :city="$station->city" />
-        </div>
-    </div>
-    <div class="col-span-2 w-full justify-end">
-        <img
-            src="{{ asset('storage/' . $station->image_path) }}"
-            alt="{{ $station->name }}"
-            class="aspect-video h-full object-cover"
-        />
-    </div>
-</div>
-
-    
-
     {{-- 戻るボタン --}}
     <x-back-button
         :url="route('stations.index')"
@@ -41,28 +13,59 @@
     />
 
     {{-- メインコンテンツ --}}
-    <div class="p-4 gap-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 rounded-xl border border-gray-300 bg-white">
-        @forelse ($visits as $visit)
-            <x-visit-card :visit="$visit" />
-        @empty
-            <p class="col-span-full py-12 text-center text-gray-600">
-                この道の駅には訪問記録がありません
-            </p>
-        @endforelse
+    <div class="mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            @forelse ($visits as $visit)
+                <x-visit-card :visit="$visit" />
+            @empty
+                <p class="col-span-full py-12 text-center text-gray-600">
+                    この道の駅には訪問記録がありません
+                </p>
+            @endforelse
+        </div>
     </div>
 
-    {{-- 道の駅が属する市町村 --}}
-    <div class="py-8">
-        <h2 class="py-2 mb-4 text-lg font-bold border-b border-blue-600">{{ $station->name }}がある市町村</h2>
+    {{-- 道の駅の詳細情報 --}}
+    <h2 class="pl-2 text-lg font-bold border-b-2 border-l-8 border-blue-600">情報</h2>
+    <div class="mb-8 sm:pt-4 grid sm:gap-8 md:grid-cols-2">
 
-        <x-tabs.panel name="list">
-            {{-- カード一覧 --}}
-            <div class="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                <x-city-list :city="$station->city" />
-            </div>
-        </x-tabs.panel>
+        <div class="w-full overflow-hidden">
+            <img
+                src="{{ asset('storage/' . $station->image_path) }}"
+                alt="{{ $station->name }}"
+                class="aspect-video w-full h-full object-cover"
+            />
+        </div>
 
+        <div class="flex flex-col">
+            
+            <a
+                href="{{ route('cities.show', $station->city) }}"
+                class="grid grid-cols-2 items-center py-2 border-b border-gray-200 hover:bg-gray-50"
+            >
+                <span class="text-sm text-gray-400">
+                    この道の駅がある市町村
+                </span>
+                <span class="text-right">
+                    {{ $station->city->prefecture->name }}{{ $station->city->name }}
+                </span>
+            </a>
+            <a
+                href="{{ $station->official_url }}"
+                class="grid grid-cols-2 items-center py-2 border-b border-gray-200 hover:bg-gray-50"
+            >
+                <span class="text-sm text-gray-400">
+                    公式サイト
+                </span>
+                <span class="text-right max-w-full truncate">
+                    {{ $station->official_url}}
+                </span>
+            </a>
+        </div>
     </div>
+
+
+
 
     {{-- 近隣の道の駅や市町村 --}}
     <x-nearby-places

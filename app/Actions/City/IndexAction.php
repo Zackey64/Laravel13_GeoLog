@@ -3,9 +3,14 @@
 namespace App\Actions\City;
 
 use App\Models\City;
+use App\Services\CityDistanceService;
 
 class IndexAction
 {
+    public function __construct(
+        private CityDistanceService $cityDistanceService,
+    ) {}
+
     public function execute(
         array $filters,
     ): array {
@@ -31,6 +36,11 @@ class IndexAction
         // 並び替え
         match ($filters['sort'] ?? 'code') {
             'name' => $query->orderBy('cities.kana'),
+            'distance' => $query = $this->cityDistanceService->orderByDistance(
+                $query,
+                (float) $filters['latitude'],
+                (float) $filters['longitude'],
+            ),
             default => $query->orderBy('prefectures.code')->orderBy('cities.code'),
         };
 

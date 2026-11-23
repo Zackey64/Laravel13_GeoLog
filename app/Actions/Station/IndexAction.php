@@ -3,9 +3,14 @@
 namespace App\Actions\Station;
 
 use App\Models\Station;
+use App\Services\StationDistanceService;
 
 class IndexAction
 {
+    public function __construct(
+        private StationDistanceService $stationDistanceService,
+    ) {}
+
     public function execute(
         array $filters,
     ): array {
@@ -29,6 +34,11 @@ class IndexAction
         // 並び替え
         match ($filters['sort'] ?? 'code') {
             'name' => $query->orderBy('stations.name'),
+            'distance' => $query = $this->stationDistanceService->orderByDistance(
+                $query,
+                (float) $filters['latitude'],
+                (float) $filters['longitude'],
+            ),
             default => $query->orderBy('prefectures.code')->orderBy('stations.code'),
         };
 

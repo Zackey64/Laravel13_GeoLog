@@ -2,13 +2,13 @@
 <x-layouts.app title="市町村一覧">
     <div>
 
+        
+
         {{-- ページタイトル --}}
         <x-page-header
             title="市町村一覧"
             description="全国の市町村を探すことができます。"
         />
-
-
 
 
         {{-- フィルターセクション --}}
@@ -46,8 +46,20 @@
             </form>
 
             {{--フィルタ＋ソート --}}
-            <form action="{{ route('cities.index') }}" method="GET">
+            <form action="{{ route('cities.index') }}" method="GET"
+                x-data="{
+                    init() {
+                        const location = window.GeolocationService.getSavedPosition();
+                        if (location) {
+                            this.$refs.latitude.value = location.latitude;
+                            this.$refs.longitude.value = location.longitude;
+                        }
+                    }
+                }"
+            >
                 <input type="hidden" name="keyword" value="{{ request('keyword') }}">
+                <input type="hidden" name="latitude" x-ref="latitude">
+                <input type="hidden" name="longitude" x-ref="longitude">
                 <div class="grid gap-2 grid-cols-3">
 
                     <x-form.select
@@ -77,8 +89,19 @@
                         (object) ['id' => 'name', 'name' => '名前順'],
                         (object) ['id' => 'distance', 'name' => '距離順'],
                     ]"
-                    :value="request('sort', 'code')"
-                    onchange="this.form.submit()"
+                    @change="
+                        if ($el.value === 'distance') {
+                            const location = window.GeolocationService.getSavedPosition();
+                            if (!location) {
+                                alert('先にヘッダーから現在地を取得してください。');
+                                $el.value = 'code';
+                                return;
+                            }
+                            $refs.latitude.value = location.latitude;
+                            $refs.longitude.value = location.longitude;
+                        }
+                        $el.form.submit();
+                    "
                     />
 
                 </div>
