@@ -43,7 +43,7 @@ class IndexAction
         };
 
         // 一覧用：ページネーションあり
-        $stations = (clone $query)->paginate(40)->withQueryString();
+        $stations = (clone $query)->paginate(20)->withQueryString();
         // 地図用：ページネーションなし
         $mapStations = (clone $query)->get();
 

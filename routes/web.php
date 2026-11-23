@@ -3,10 +3,11 @@
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\VisitController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [StationController::class, 'index'])
-    ->name('stations.index');
+Route::get('/', [DashboardController::class, 'index'])
+    ->name('dashboard.index');
 
 Route::get('/stations', [StationController::class, 'index'])
     ->name('stations.index');

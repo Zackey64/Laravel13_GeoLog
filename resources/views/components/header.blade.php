@@ -2,7 +2,7 @@
     <div class="mx-auto flex p-2 max-w-7xl items-center justify-between">
 
         {{-- ロゴ --}}
-        <a href="{{ route('stations.index') }}"
+        <a href="{{ route('dashboard.index') }}"
             class="text-2xl font-extrabold tracking-tight text-blue-600">
             GeoLog
         </a>
