@@ -19,18 +19,28 @@ class FetchStationImages extends Command
 
     public function handle()
     {
-        $stations = Station::query()->whereNotNull('official_url')
-            ->whereNull('image_path')->get();
+        $disk = Storage::disk('s3');
+
+        $stations = Station::query()
+            ->whereNotNull('official_url')
+            ->lazyById();
+
+        $failed = false;
 
         foreach ($stations as $station) {
             try {
+                if ($station->image_path && $disk->exists($station->image_path)) {
+                    continue;
+                }
+
                 $this->fetchImage($station);
             } catch (\Throwable $e) {
+                $failed = true;
                 $this->warn("失敗: {$station->name} - {$e->getMessage()}");
             }
         }
 
-        return self::SUCCESS;
+        return $failed ? self::FAILURE : self::SUCCESS;
     }
 
     private function fetchImage(Station $station): void
@@ -110,14 +120,11 @@ class FetchStationImages extends Command
         // 保存
         $path = 'stations/'.$station->id.'.'.$extension;
 
-        Storage::disk('public')->put(
-            $path,
-            $imageResponse->body()
-        );
+        if (! Storage::disk('s3')->put($path, $imageResponse->body())) {
+            throw new \RuntimeException('画像を保存できませんでした。');
+        }
 
-        $station->update([
-            'image_path' => $path,
-        ]);
+        $station->update(['image_path' => $path]);
 
         $this->info("取得成功: {$station->name} ({$imageUrl})");
     }
