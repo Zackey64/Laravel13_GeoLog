@@ -9,32 +9,34 @@ use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
+use RuntimeException;
+use Throwable;
 
 class FetchStationImages extends Command
 {
-    protected $signature = 'stations:fetch-images';
+    protected $signature = 'stations:fetch-images
+        {--refresh : 画像URLが登録済みの道の駅も再取得する}';
 
-    protected $description = '公式ページから道の駅の画像を取得する';
+    protected $description = '公式ページから道の駅の画像URLを取得する';
 
-    public function handle()
+    public function handle(): int
     {
-        $disk = Storage::disk('s3');
-
         $stations = Station::query()
             ->whereNotNull('official_url')
+            ->when(! $this->option('refresh'), function ($query) {
+                $query->where(function ($query) {
+                    $query->whereNull('image_path')
+                        ->orWhere('image_path', 'like', 'stations/%');
+                });
+            })
             ->lazyById();
 
         $failed = false;
 
         foreach ($stations as $station) {
             try {
-                if ($station->image_path && $disk->exists($station->image_path)) {
-                    continue;
-                }
-
                 $this->fetchImage($station);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $failed = true;
                 $this->warn("失敗: {$station->name} - {$e->getMessage()}");
             }
@@ -45,95 +47,52 @@ class FetchStationImages extends Command
 
     private function fetchImage(Station $station): void
     {
-        // 公式ページを取得
-        $response = Http::timeout(15)->get($station->official_url);
-        $response->throw();
+        $response = Http::timeout(15)
+            ->get($station->official_url)
+            ->throw();
 
-        // HTMLを解析
         $dom = new DOMDocument;
+        $previous = libxml_use_internal_errors(true);
 
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($response->body());
-        libxml_clear_errors();
+        try {
+            if (! $dom->loadHTML($response->body())) {
+                throw new RuntimeException('公式ページのHTMLを解析できませんでした。');
+            }
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previous);
+        }
 
         $xpath = new DOMXPath($dom);
+        $baseUrl = new Uri($station->official_url);
 
-        // src属性を持つ画像を取得
-        $images = $xpath->query('//img[@src]');
-
-        $imageUrl = null;
-        $extension = null;
-
-        // 画像のURLを取得（最初に見つかった有効な画像）
-        foreach ($images as $image) {
+        foreach ($xpath->query('//img[@src]') as $image) {
             $src = trim($image->getAttribute('src'));
 
             if ($src === '') {
                 continue;
             }
 
-            // jpg / jpeg 以外は除外
-            $extension = strtolower(
-                pathinfo(parse_url($src, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION)
-            );
+            $url = UriResolver::resolve($baseUrl, new Uri($src));
+            $path = strtolower($url->getPath());
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
 
-            if (! in_array($extension, ['png', 'jpg', 'jpeg'], true)) {
+            if (! in_array($url->getScheme(), ['http', 'https'], true)
+                || $url->getHost() === ''
+                || ! in_array($extension, ['png', 'jpg', 'jpeg'], true)
+                || str_contains($path, '/image/')
+                || str_contains($path, '/root/')
+                || ! str_contains(strtolower((string) $url), 'kobetu')) {
                 continue;
             }
 
-            $url = $this->resolveUrl($station->official_url, $src);
+            $station->update(['image_path' => (string) $url]);
 
-            // image ディレクトリ配下は除外
-            if (str_contains(strtolower($url), '/image/')) {
-                continue;
-            }
-
-            // root ディレクトリ配下は除外
-            if (str_contains(strtolower($url), '/root/')) {
-                continue;
-            }
-            // kobetu を含まない画像は除外
-            if (! str_contains(strtolower($url), 'kobetu')) {
-                continue;
-            }
-
-            if (! in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'], true)
-                || ! parse_url($url, PHP_URL_HOST)) {
-                continue;
-            }
-
-            $imageUrl = $url;
-
-            break;
-        }
-
-        if (! $imageUrl) {
-            $this->warn("画像なし: {$station->name}");
+            $this->info("取得成功: {$station->name} ({$url})");
 
             return;
         }
 
-        // 画像をダウンロード
-        $imageResponse = Http::timeout(15)->get($imageUrl);
-        $imageResponse->throw();
-
-        // 保存
-        $path = 'stations/'.$station->id.'.'.$extension;
-
-        if (! Storage::disk('s3')->put($path, $imageResponse->body())) {
-            throw new \RuntimeException('画像を保存できませんでした。');
-        }
-
-        $station->update(['image_path' => $path]);
-
-        $this->info("取得成功: {$station->name} ({$imageUrl})");
-    }
-
-    private function resolveUrl(string $baseUrl, string $imageUrl): string
-    {
-        return (string) UriResolver::resolve(
-            new Uri($baseUrl),
-            new Uri($imageUrl)
-        );
+        $this->warn("画像なし: {$station->name}");
     }
 }
