@@ -6,18 +6,18 @@
         <div class="flex justify-center sm:justify-between flex-1 gap-2 items-center">
 
             <div class="hidden sm:block">
-                <p class="text-sm text-gray-700 leading-5 dark:text-gray-600">
-                    {!! __('Showing') !!}
+                <p class="text-sm text-gray-600 leading-5 dark:text-gray-600">
+                    <span class="font-medium">{{ $paginator->total() }}</span>
+                    {!! __('件中') !!}
                     @if ($paginator->firstItem())
                         <span class="font-medium">{{ $paginator->firstItem() }}</span>
-                        {!! __('to') !!}
+                        {!! __('～') !!}
                         <span class="font-medium">{{ $paginator->lastItem() }}</span>
                     @else
                         {{ $paginator->count() }}
                     @endif
-                    {!! __('of') !!}
-                    <span class="font-medium">{{ $paginator->total() }}</span>
-                    {!! __('results') !!}
+                    {!! __('件表示') !!}
+
                 </p>
             </div>
 
@@ -26,7 +26,7 @@
 
                     {{-- Previous Page Link --}}
                     @if ($paginator->onFirstPage())
-                        <span class="rounded-full px-3 py-1 text-sm text-gray-300">
+                        <span class="rounded-full px-3 py-1 text-sm font-bold text-gray-300">
                             ＜
                         </span>
                     @else
@@ -46,7 +46,7 @@
                                     href="{{ $url }}"
                                     @class([
                                     'rounded-full px-3 py-1 text-sm font-bold transition',
-                                    'bg-blue-600 text-white' => $page === $paginator->currentPage(),
+                                    'bg-main text-white' => $page === $paginator->currentPage(),
                                     'text-gray-600 bg-white' => $page !== $paginator->currentPage(),
                                     ])
                                 >
@@ -65,7 +65,7 @@
                             ＞
                         </a>
                     @else
-                        <span class="rounded-full px-3 py-1 text-sm text-gray-300">
+                        <span class="rounded-full px-3 py-1 text-sm font-bold text-gray-300">
                             ＞
                         </span>
                     @endif

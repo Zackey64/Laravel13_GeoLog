@@ -26,7 +26,7 @@
     </div>
 
     {{-- 道の駅の詳細情報 --}}
-    <h2 class="pl-2 text-lg font-bold border-b-2 border-l-8 border-blue-600">情報</h2>
+    <h2 class="pl-2 text-lg font-bold border-b-2 border-l-8 border-main text-main">情報</h2>
     <div class="mb-8 sm:pt-4 grid sm:gap-8 md:grid-cols-2">
 
         <div class="w-full overflow-hidden">
@@ -59,6 +59,19 @@
                 </span>
                 <span class="text-right max-w-full truncate">
                     {{ $station->official_url}}
+                </span>
+            </a>
+            <a
+                href="https://www.google.com/maps/search/?api=1&amp;query={{ "道の駅 " . rawurlencode($station->name) }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="grid grid-cols-2 items-center py-2 border-b border-gray-200 hover:bg-gray-50"
+            >
+                <span class="text-sm text-gray-400">
+                    住所 ( GoogleMap で開く )
+                </span>
+                <span class="text-right">
+                    {{ $station->address }}
                 </span>
             </a>
         </div>

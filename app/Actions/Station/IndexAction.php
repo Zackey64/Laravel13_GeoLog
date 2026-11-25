@@ -27,8 +27,8 @@ class IndexAction
         }
         // 来訪記録
         match ($filters['visited_status'] ?? null) {
-            'visited' => $query->visited(),
-            'not_visited' => $query->notVisited(),
+            'visited' => $query->hasVisits(),
+            'not_visited' => $query->hasNoVisits(),
             default => null,
         };
         // 並び替え

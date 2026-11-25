@@ -4,7 +4,7 @@
 ])
 
 <a href="{{ $url ?? url()->previous() }}"
-   class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-green-700">
+   class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition hover:text-emerald-600">
 
     <svg xmlns="http://www.w3.org/2000/svg"
          class="h-4 w-4"

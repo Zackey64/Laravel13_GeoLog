@@ -3,8 +3,8 @@
     'description' => null,
 ])
 
-<div class="py-4">
-    <h1 class="text-2xl font-bold tracking-tight text-gray-900">
+<div class="my-4 px-4 py-2 bg-main-soft rounded-lg">
+    <h1 class="text-2xl font-bold tracking-tight text-main">
         {{ $title }}
     </h1>
 

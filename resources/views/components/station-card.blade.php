@@ -26,11 +26,11 @@
 
     {{-- 訪問済みラベル --}}
     @if ($station->visited)
-                <div class="absolute top-2 right-2  flex items-center border border-green-600 rounded-md overflow-hidden bg-green-50"> 
-                    <p class="text-xs font-bold text-green-600 px-1">
+                <div class="absolute top-2 right-2  flex items-center border border-main rounded-md overflow-hidden bg-green-50"> 
+                    <p class="text-xs font-bold text-main px-1">
                         記録
                     </p>
-                    <p class="text-xs font-bold aspect-square text-center text-white bg-green-600 px-1">
+                    <p class="text-xs font-bold aspect-square text-center text-white bg-main px-1">
                         {{ $station->visits->count() }}
                     </p>
                 </div>

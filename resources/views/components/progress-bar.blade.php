@@ -1,30 +1,37 @@
-
 @props([
+    'name',
+    'current' => 0,
     'total' => 0,
-    'visited' => 0,
 ])
 
 @php
-    $percentage = $total > 0
-        ? round($visited / $total * 100, 1)
+    $progress = $total > 0
+        ? round($current / $total * 100, 1)
         : 0;
 @endphp
 
-<div {{ $attributes->class(['w-full']) }}>
-    <div class="mb-2 flex items-center justify-between">
-        <span class="text-sm text-gray-600">
-            {{ $visited }} / {{ $total }}
-        </span>
+<div {{ $attributes }}>
+    {{-- 名称・進捗率 --}}
+    <div class="flex items-center justify-between">
+        <div>
+            <span class='font-bold text-gray-600'>
+                {{ $name }}
+            </span>
+            <span class='px-2 text-gray-600 text-xs'>
+                ( {{ $current }} / {{ $total }} )
+            </span>
+        </div>
 
-        <span class="text-sm font-bold text-green-600">
-            {{ $percentage }}%
+        <span class='font-bold text-main'>
+            {{ $progress }}%
         </span>
     </div>
 
-    <div class="h-3 w-full overflow-hidden rounded-full bg-gray-200">
+    {{-- プログレスバー --}}
+    <div class='h-1 overflow-hidden rounded-full bg-gray-300'>
         <div
-            class="h-full rounded-full bg-green-500 transition-all duration-300"
-            style="width: {{ min(100, max(0, $percentage)) }}%"
+            class="h-full rounded-full bg-main"
+            style="width: {{ $progress }}%"
         ></div>
     </div>
 </div>

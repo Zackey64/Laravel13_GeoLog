@@ -1,5 +1,5 @@
 
-<div class="p-1 flex justify-between rounded-full overflow-hidden border border-gray-300 bg-white"
+<div class="p-1 flex justify-between rounded-lg overflow-hidden border border-gray-300 bg-white"
     x-data="{
         location: null,
         loading: false,
@@ -38,7 +38,7 @@
     </div>
 
     <button
-    class="px-2 text-sm font-bold text-white bg-blue-600 rounded-full"
+    class="px-3 text-sm font-bold text-white bg-main rounded-full"
         type="button"
         @click="updateLocation()"
         :disabled="loading"

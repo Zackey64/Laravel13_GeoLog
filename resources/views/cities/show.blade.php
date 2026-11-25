@@ -27,7 +27,7 @@
 
     {{-- 市町村内の道の駅 --}}
     <div class="my-8">
-        <h2 class="pl-2 mb-4 text-lg font-bold border-b-2 border-l-8 border-blue-600">{{ $city->name }}内の道の駅</h2>
+        <h2 class="pl-2 mb-4 text-lg font-bold border-b-2 border-l-8 border-main text-main">{{ $city->name }}内の道の駅</h2>
 
         <x-tabs.panel name="list">
             {{-- カード一覧 --}}

@@ -24,7 +24,7 @@
         {{-- 情報 --}}
         <div @class([
             'flex w-full px-2 py-2 gap-2 items-center justify-between rounded-lg',
-            'bg-green-50 hover:bg-green-100 ' => $city->visited,
+            'bg-main-soft hover:bg-green-100 ' => $city->visited,
             'bg-white hover:bg-gray-50' => !$city->visited,
         ])>
         <div class="flex gap-1 items-end">
@@ -37,11 +37,11 @@
         </div>
 
             @if ($city->visited)
-                <div class=" flex items-center border border-green-600 rounded-md overflow-hidden"> 
-                    <p class="text-xs font-bold text-green-600 px-1">
+                <div class=" flex items-center border border-main rounded-md overflow-hidden"> 
+                    <p class="text-xs font-bold text-main px-1">
                         記録
                     </p>
-                    <p class="text-xs font-bold aspect-square text-center text-white bg-green-600 px-1">
+                    <p class="text-xs font-bold aspect-square text-center text-white bg-main px-1">
                         {{ $city->visitCount }}
                     </p>
                 </div>

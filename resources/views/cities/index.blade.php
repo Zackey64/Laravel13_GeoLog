@@ -12,7 +12,7 @@
 
 
         {{-- フィルターセクション --}}
-        <div class="p-4 grid md:grid-cols-2 gap-4 rounded-xl border border-gray-300 bg-white">
+        <div class="p-4 grid md:grid-cols-2 gap-2 rounded-xl border border-gray-300 bg-white">
 
             {{-- 都道府県フィルター --}}
             <form action="{{ route('cities.index') }}" method="GET">
@@ -89,6 +89,7 @@
                         (object) ['id' => 'name', 'name' => '名前順'],
                         (object) ['id' => 'distance', 'name' => '距離順'],
                     ]"
+                    :value="request('sort', 'code')"
                     @change="
                         if ($el.value === 'distance') {
                             const location = window.GeolocationService.getSavedPosition();
@@ -115,13 +116,13 @@
         <x-tabs.index default="list">
 
             {{-- タブ切り替えボタン＋ 登録件数 --}}
-            <div class="my-4 flex items-center border-b border-gray-300">
+            <div class="my-2 flex items-center border-b border-gray-300">
                 <div class="flex-1">
                     <x-tabs.button name="list" label="一覧" />
                     <x-tabs.button name="map" label="マップ" />
                 </div>
                 <div>
-                    <p class="text-md text-gray-600">
+                    <p class="font-bold text-md text-main">
                         全 {{ $cities->total() }} 件
                     </p>
                 </div>

@@ -65,7 +65,7 @@ class City extends Model
     /**
      * 訪問済みの市町村
      */
-    public function scopeVisited(Builder $query): Builder
+    public function scopeHasVisits(Builder $query): Builder
     {
         return $query->where(function ($query) {
             $query->whereHas('visits')
@@ -76,7 +76,7 @@ class City extends Model
     /**
      * 未訪問の市町村
      */
-    public function scopeNotVisited(Builder $query): Builder
+    public function scopeHasNoVisits(Builder $query): Builder
     {
         return $query
             ->whereDoesntHave('visits')

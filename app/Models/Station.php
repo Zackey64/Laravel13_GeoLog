@@ -35,7 +35,7 @@ class Station extends Model
 
     /**
      * 市区町村とのリレーション
-     * 市区町村が属する道の駅を取得する
+     * 道の駅が属する市区町村を取得する
      */
     public function city(): BelongsTo
     {
@@ -68,17 +68,17 @@ class Station extends Model
     }
 
     /**
-     * 訪問済みの道の駅
+     * 訪問履歴が存在する道の駅を取得するスコープ
      */
-    public function scopeVisited(Builder $query): Builder
+    public function scopeHasVisits(Builder $query): Builder
     {
         return $query->whereHas('visits');
     }
 
     /**
-     * 未訪問の道の駅
+     * 訪問履歴が存在しない道の駅を取得するスコープ
      */
-    public function scopeNotVisited(Builder $query): Builder
+    public function scopeHasNoVisits(Builder $query): Builder
     {
         return $query->whereDoesntHave('visits');
     }
@@ -88,7 +88,7 @@ class Station extends Model
     // ================================
 
     /**
-     * 訪問済みかどうかのアクセサ
+     * 訪問履歴が存在するかどうかのアクセサ
      */
     protected function visited(): Attribute
     {
