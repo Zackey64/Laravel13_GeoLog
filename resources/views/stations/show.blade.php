@@ -31,9 +31,11 @@
 
         <div class="w-full overflow-hidden">
             <img
-                src="{{ asset('storage/' . $station->image_path) }}"
-                alt="{{ $station->name }}"
-                class="aspect-video w-full h-full object-cover"
+            src="{{ preg_match('~^https?://~i', $station->image_path)
+                ? $station->image_path
+                : asset('storage/' . $station->image_path) }}"
+            alt="{{ $station->name }}"
+            class="aspect-video w-full h-full object-cover"
             />
         </div>
 

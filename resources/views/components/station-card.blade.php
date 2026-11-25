@@ -7,10 +7,12 @@
     {{-- 写真 --}}
     @if ($station->image_path)
         <img
-            src="{{ asset('storage/' . $station->image_path) }}"
+            src="{{ preg_match('~^https?://~i', $station->image_path)
+                ? $station->image_path
+                : asset('storage/' . $station->image_path) }}"
             alt="{{ $station->name }}"
             class="absolute inset-0 h-full w-full object-cover"
-        >
+        />
     @else
         <span class="text-sm text-gray-400">画像なし</span>
     @endif
